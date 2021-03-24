@@ -45,21 +45,22 @@ GRAPH = {
 def main():
     args = parse_args()
     assignments = {
-        'A': 1,
+        'A': random.randint(0,1),
         'B': 1,
-        'C': 1,
-        'D': 1
+        'C': random.randint(0,1),
+        'D': random.randint(0,1)
     }
     sample_distributions = []
     for _ in range(0, args.samples):
-        # sample A
         for var in ['A', 'C', 'D']:
+            # calculate the true/false assignment probabilities
             assignments[var] = 0
             prob_false = calculate_probability(assignments, var)
             assignments[var] = 1
             prob_true = calculate_probability(assignments, var)
-            print(f'prob true is {prob_true} and prob false is {prob_false}')
-            assignments[var] = 1 if prob_true > prob_false else 0
+            # RNG to determine the random sample
+            rng = random.uniform(0, 1)
+            assignments[var] = 1 if rng < prob_true else 0
             if var == 'A':
                 normalization_factor = prob_false + prob_true
                 sample_distributions.append((prob_true/normalization_factor, prob_false/normalization_factor))
@@ -79,6 +80,7 @@ def gibbs_random_sample(assignments):
 def calculate_probability(assignments, var):
     ''' Calculate sample probability using formula P(a|N(X))'''
     curr_prob = 1
+    # compute the probability based on the MB of the node
     for neighbour in PROBABILITIES[var][assignments[var]]:
         curr_prob *= PROBABILITIES[var][assignments[var]][neighbour][assignments[neighbour]]
     return curr_prob
