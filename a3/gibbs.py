@@ -63,7 +63,9 @@ def main():
             assignments[var] = 1 if rng < prob_true else 0
             if var == 'A':
                 normalization_factor = prob_false + prob_true
-                sample_distributions.append((prob_true/normalization_factor, prob_false/normalization_factor))
+                sample_distributions.append((
+                    prob_true/normalization_factor,
+                    prob_false/normalization_factor))
     # arbitrarily plot P(a_1|b_1)
     y_axis = [x[0] for x in sample_distributions]
     x_axis = list(range(1, args.samples + 1))
